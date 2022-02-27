@@ -1,25 +1,3 @@
-"""
-MD FILE:
-
-# START PROJECT - Project Name - Status:In Progress
-
-## START TASK - Task Name - Status:In Progress
-
-### START TIME - 18/03/2022 - 18:50:30
-### END TIME - 18/03/2022 - 18:50:30 - Some kind of comment
-
-## END TASK - Task Name
-
-## START TASK - Task Name - Status:Done
-
-### START TIME - 18/03/2022 - 18:50:30
-### END TIME - 18/03/2022 - 18:50:30 - NONE (When you don't want to comment anything)
-
-## END TASK - Task Name
-
-# END PROJECT - Project Name
-"""
-
 class Time:
   start_date = ''
   end_date = ''
@@ -66,8 +44,9 @@ if tracker_file_exists:
 
   for line in tracker_file_lines:
     if "START PROJECT" in line:
-      project_name = 'read project name'
-      project_status = 'read project status'
+      line_arr = line.split(" - ")
+      project_name = line_arr[1].replace('\n', '')
+      project_status = line_arr[2].replace('\n', '')
       tasks = []
     
     if "END PROJECT" in line:
@@ -75,8 +54,9 @@ if tracker_file_exists:
 
 
     if "START TASK" in line:
-      task_name = 'read task name'
-      task_status = 'read task status'
+      line_arr = line.split(" - ")
+      task_name = line_arr[1].replace('\n', '')
+      task_status = line_arr[2].replace('\n', '')
       times = []
 
     if "END TASK" in line:
@@ -84,9 +64,22 @@ if tracker_file_exists:
 
 
     if "START TIME" in line:
-      time_start = 'read_time_start'
+      line_arr = line.split(" - ")
+      time_start = line_arr[1].replace('\n', '')
 
     if 'END TIME' in line:
-      time_end = 'read_time_end'
-      comment = 'read_comment_or_NONE'
+      line_arr = line.split(" - ")
+      time_end = line_arr[1].replace('\n', '')
+      comment = line_arr[2].replace('\n', '')
       times.append(Time(time_start, time_end, comment))
+
+  
+  # Print Everything
+  for project in projects:
+    print("Project: {} ({})".format(project.name, project.status))
+
+    for task in project.tasks:
+      print("\tTask: {} ({})".format(task.name, task.status))
+
+      for time in task.times:
+        print("\t\tTime: {} - {} ({})".format(time.start_date, time.end_date, time.comment))
