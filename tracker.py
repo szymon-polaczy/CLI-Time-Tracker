@@ -1,23 +1,23 @@
 """
 MD FILE:
 
-# START - Project Name - Status:In Progress
+# START PROJECT - Project Name - Status:In Progress
 
-## START - Task Name - Status:In Progress
+## START TASK - Task Name - Status:In Progress
 
-### Time Start - 18/03/2022 - 18:50:30
-### Time End - 18/03/2022 - 18:50:30 - Some kind of comment
+### START TIME - 18/03/2022 - 18:50:30
+### END TIME - 18/03/2022 - 18:50:30 - Some kind of comment
 
-## END - Task Name
+## END TASK - Task Name
 
-## START - Task Name - Status:Done
+## START TASK - Task Name - Status:Done
 
-### Time Start - 18/03/2022 - 18:50:30
-### Time End - 18/03/2022 - 18:50:30 - NONE (When you don't want to comment anything)
+### START TIME - 18/03/2022 - 18:50:30
+### END TIME - 18/03/2022 - 18:50:30 - NONE (When you don't want to comment anything)
 
-## END - Task Name
+## END TASK - Task Name
 
-# END - Project Name
+# END PROJECT - Project Name
 """
 
 class Time:
@@ -54,6 +54,39 @@ class Project:
 
 import os
 
+projects = []
+
 tracker_file_exists = os.path.exists("./tracker.md")
 if tracker_file_exists:
-  print('read file')
+  tracker_file = open('./tracker.md', 'r')
+  tracker_file_lines = tracker_file.readlines()
+
+  times = []
+  tasks = []
+
+  for line in tracker_file_lines:
+    if "START PROJECT" in line:
+      project_name = 'read project name'
+      project_status = 'read project status'
+      tasks = []
+    
+    if "END PROJECT" in line:
+      projects.append(Project(project_name, project_status, tasks))
+
+
+    if "START TASK" in line:
+      task_name = 'read task name'
+      task_status = 'read task status'
+      times = []
+
+    if "END TASK" in line:
+      tasks.append(Task(task_name, task_status, times))
+
+
+    if "START TIME" in line:
+      time_start = 'read_time_start'
+
+    if 'END TIME' in line:
+      time_end = 'read_time_end'
+      comment = 'read_comment_or_NONE'
+      times.append(Time(time_start, time_end, comment))
