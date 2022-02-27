@@ -41,39 +41,54 @@ def showEverything():
 
 
 
-def addTimer(running_project, running_task, running_time, projects):
-  #check if running_time is empty
+def addTimer(running_time, projects):
   if running_time != None:
     print('End previous timer')
     return
 
-  #select project TODO: Add the ability to add a project
+  #TODO: Add the ability to add a project
   count=0
   for project in projects:
     print("[{}] {}".format(count, project.name))
     count+=1
 
   selected_project_number = int(input(">: ")) # TODO: this of course has to be checked
-  running_project = projects[selected_project_number]
 
   print('')
 
-  #select task
+  #TODO: Add the abolity to add a task
   count=0
-  for task in running_project.tasks:
+  for task in projects[selected_project_number].tasks:
     print("[{}] {}".format(count, task.name))
     count+=1
 
   selected_task_number = int(input(">: ")) # TODO: this of course has to be checked
-  running_task = project.tasks[selected_task_number]
 
-  #create time
-  running_time = Time('now', '', '')
+  running_time = Time('now', '', '') # TODO: get date
   
   print('')
   print('timer added')
 
-  return running_time, running_task, running_project
+  return running_time, selected_task_number, selected_project_number
+
+
+
+def endTimer(running_project, running_task, running_time, projects):
+  comment = input("Comment or Enter to continue: ").replace('\n', '')
+
+  if comment == '':
+    comment = "NONE"
+
+  running_time.comment = comment
+  running_time.end_date = 'now' #TODO: get date
+
+  projects[running_project].tasks[running_task].times.append(running_time)
+
+  print('')
+  print('timer ended')
+
+  return projects
+
 
 
 import os
@@ -129,21 +144,24 @@ while TRUE:
 
   # show running time
   if running_time != None:
-    print("Timer running:{} -> {} -> {} until now".format(running_project.name, running_task.name, running_time.start_date))
+    print("Timer running:{} -> {} -> {} until now".format(projects[running_project].name, projects[running_project].tasks[running_task].name, running_time.start_date))
 
   # get input from the user
   user_input = input(">: ")
   print('')
 
   #options:
-  if user_input == "help" or user_input == "man": #showing user a manual
+  if user_input == "help" or user_input == "man":
     manual = open('./user_manual.md', 'r')
     print(manual.read())
     manual.close()
   elif user_input == "add timer":
-    running_time, running_task, running_project = addTimer(running_project, running_task, running_time, projects)
+    running_time, running_task, running_project = addTimer(running_time, projects)
   elif user_input == "end timer":
-    print('end timer')# end timer - you can add a comment to it
+    projects = endTimer(running_project, running_task, running_time, projects)
+    running_project = None
+    running_task = None
+    running_time = None
   elif user_input == "change task status":
     print('change task status')#select task - you have to end a timer to do this - planned / in progress / done / backlog / paussed
   elif user_input == "change project status":
