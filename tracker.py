@@ -41,6 +41,41 @@ def showEverything():
 
 
 
+def addTimer(running_project, running_task, running_time, projects):
+  #check if running_time is empty
+  if running_time != None:
+    print('End previous timer')
+    return
+
+  #select project TODO: Add the ability to add a project
+  count=0
+  for project in projects:
+    print("[{}] {}".format(count, project.name))
+    count+=1
+
+  selected_project_number = int(input(">: ")) # TODO: this of course has to be checked
+  running_project = projects[selected_project_number]
+
+  print('')
+
+  #select task
+  count=0
+  for task in running_project.tasks:
+    print("[{}] {}".format(count, task.name))
+    count+=1
+
+  selected_task_number = int(input(">: ")) # TODO: this of course has to be checked
+  running_task = project.tasks[selected_task_number]
+
+  #create time
+  running_time = Time('now', '', '')
+  
+  print('')
+  print('timer added')
+
+  return running_time, running_task, running_project
+
+
 import os
 from pickle import TRUE
 
@@ -85,23 +120,28 @@ if tracker_file_exists:
       comment = line_arr[2].replace('\n', '')
       times.append(Time(time_start, time_end, comment))
 
-running_time = Time('now', '', '') #get date - mm/dd/yyyy hh:mm:ss
+
+running_project = None
+running_task = None
+running_time = None
 while TRUE:
   os.system('clear')
 
   # show running time
-  if running_time.end_date != '':
-    print("Timer running: {} - NOW".format(running_time.start_date))
+  if running_time != None:
+    print("Timer running:{} -> {} -> {} until now".format(running_project.name, running_task.name, running_time.start_date))
 
   # get input from the user
   user_input = input(">: ")
   print('')
 
   #options:
-  if user_input == "help" or user_input == "man":
-    print('show help')# help 
+  if user_input == "help" or user_input == "man": #showing user a manual
+    manual = open('./user_manual.md', 'r')
+    print(manual.read())
+    manual.close()
   elif user_input == "add timer":
-    print('add timer')# add timer - you have to end the previous one
+    running_time, running_task, running_project = addTimer(running_project, running_task, running_time, projects)
   elif user_input == "end timer":
     print('end timer')# end timer - you can add a comment to it
   elif user_input == "change task status":
@@ -110,6 +150,12 @@ while TRUE:
     print('change project status')#select project - all of the tasks have to be done - you have to end a timer to do this - planned / in progress / done / backlog / paussed
   elif user_input == "show everything":
     showEverything()
+
+  # create task
+  # create project
+  # edit project
+  # edit task
+  # edit timer (you can only edit stopped ones)
   elif user_input == "exit":
     print('exit the app')#all timers have to be stopped - you save to the file
 
