@@ -29,8 +29,20 @@ class Project:
     self.tasks = read_tasks
 
 
+def showEverything():
+  for project in projects:
+    print("Project: {} ({})".format(project.name, project.status))
+
+    for task in project.tasks:
+      print("\tTask: {} ({})".format(task.name, task.status))
+
+      for time in task.times:
+        print("\t\tTime: {} - {} ({})".format(time.start_date, time.end_date, time.comment))
+
+
 
 import os
+from pickle import TRUE
 
 projects = []
 
@@ -73,13 +85,33 @@ if tracker_file_exists:
       comment = line_arr[2].replace('\n', '')
       times.append(Time(time_start, time_end, comment))
 
-  
-  # Print Everything
-  for project in projects:
-    print("Project: {} ({})".format(project.name, project.status))
+running_time = Time('now', '', '') #get date - mm/dd/yyyy hh:mm:ss
+while TRUE:
+  os.system('clear')
 
-    for task in project.tasks:
-      print("\tTask: {} ({})".format(task.name, task.status))
+  # show running time
+  if running_time.end_date != '':
+    print("Timer running: {} - NOW".format(running_time.start_date))
 
-      for time in task.times:
-        print("\t\tTime: {} - {} ({})".format(time.start_date, time.end_date, time.comment))
+  # get input from the user
+  user_input = input(">: ")
+  print('')
+
+  #options:
+  if user_input == "help" or user_input == "man":
+    print('show help')# help 
+  elif user_input == "add timer":
+    print('add timer')# add timer - you have to end the previous one
+  elif user_input == "end timer":
+    print('end timer')# end timer - you can add a comment to it
+  elif user_input == "change task status":
+    print('change task status')#select task - you have to end a timer to do this - planned / in progress / done / backlog / paussed
+  elif user_input == "change project status":
+    print('change project status')#select project - all of the tasks have to be done - you have to end a timer to do this - planned / in progress / done / backlog / paussed
+  elif user_input == "show everything":
+    showEverything()
+  elif user_input == "exit":
+    print('exit the app')#all timers have to be stopped - you save to the file
+
+  print()
+  input('Press enter to continue: ')
